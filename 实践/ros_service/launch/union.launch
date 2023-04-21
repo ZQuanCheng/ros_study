@@ -1,0 +1,97 @@
+<launch>
+    <!-- 
+        source ~/catkin_ws/devel/setup.bash
+        roslaunch ros_service union.launch a:=1 b:=2 c:=3 d:=4
+    -->
+
+    <!-- 
+        启动节点的基本格式为
+        <node pkg="" type="" name="" output="screen"/> 
+
+        其中，
+        node pkg="" ：功能包的名称
+ 
+        type=""：实际运行的节点的名称（节点名）
+        执行C语言程序结点： CMakeLists.txt中add_executable()对应的配置文件映射名
+        执行python结点： CMakeLists.txt中catkin_install_python()对应的python文件名    
+
+        name="" ：根据需要，在运行时更改的名称
+ 
+        output="screen"也就是日志信息打印在窗口中输出 
+
+        args定义变量，以便在像下面这样运行时更改参数。
+        args="$(arg1 arg1_name) $(arg2 arg2_name) ..."
+        在 launch 文件中可以采用$(arg arg_name) 的形式调用参数值。
+        roslaunch ros_service union.launch a:=1 b:=2 c:=3 d:=4
+    -->
+
+    <!--
+        .launch文件中有两种参数：
+        * <arg> ：是launch文件内部的局部变量，仅限于launch文件使用。
+        * <param> 和 <rosparam>：参数服务器中的参数 
+
+        arg 和 param 在ROS里有根本性的区别：
+        * arg 不储存在参数服务器中，不能提供给节点使用，只能在launch文件中使用。
+        * param则是储存在参数服务器中，可以被节点使用。
+    -->
+
+    <!-- 
+        <arg> 是launch文件内部的局部变量，仅限于launch文件使用。
+
+        定义内部变量arg的基本格式有两种：
+        <arg name="arg1" default="1"/>    name:参数名  default：参数默认值  
+        <arg name="arg2" value="2"/>      name:参数名  value：参数值
+
+        两者的区别是使用 default 赋值的参数可以在命令行中像下面这样被修改，value 则不行
+        例如：
+        roslaunch demo demo.launch arg_1:=777 # 正确
+        roslaunch demo demo.launch arg_2:=777 # 错误
+    
+    -->
+
+    <!--
+        <param> ：作用相当于命令行中的 rosparam set，用于设置ROS系统运行中的参数，存储在参数服务器中。
+        例如：<param name="demo_param" type="int" value="666"/>
+
+        <rosparam>：加载参数文件中的多个参数，允许从 YAML 文件中一次性导入大量参数。
+                    其效果等于终端指令： rosparam load file_name。
+        例如：<rosparam command="load" file="$(find pkg-name)/path/name.yaml"/>
+             $(find pkg-name) 语句会先找到pkg-name功能包，然后在功能包中定位到 path/name.yaml 文件。
+
+    -->
+    <!--
+        <param>和<arg>还可以结合使用
+        例如：
+        E:/机器人/2-ROS学习/ROS_Robot_Programming_CN.pdf中  7.6. roslaunch的用法 最后一段
+        “如下面的例子所示，利用其中的参数设置<param>和launch文件中的变量<arg>，可以在运行launch时从外部修改内部变量，因此甚至可以在运行的同时修改节点内部的参数。
+        这是一个非常有用和广泛使用的方法，因此需要掌握。”
+        <launch>
+            <arg name="update_period" default="10" />
+            <param name="timing" value="$(arg update_period)"/>
+        <launch>
+        命令行： roslaunch demo demo.launch update_period:=30
+    -->
+
+    <!-- 
+        <group> 是对指定节点进行分组的标签。选项有ns。这是命名空间（name space），是组的名称，属于该组的节点和消息都包含在由ns指定的名称中。 
+    -->
+
+    <arg name="a" default="0"/>
+    <arg name="b" default="1"/>
+    <arg name="c" default="2"/>
+    <arg name="d" default="3"/>
+
+    <group ns="ns1">
+    <!-- service_server_1 -->
+    <node pkg="ros_service" type="service_server_node" name="service_server_1" output="screen"/>
+    <!-- service_client_1 -->
+    <node pkg="ros_service" type="service_client_node" name="service_client_1" output="screen" args="$(arg a) $(arg b)"/>
+    </group>
+
+    <group ns="ns2">
+    <!-- service_server_2 -->
+    <node pkg="ros_service" type="service_server_node" name="service_server_2" output="screen"/>
+    <!-- service_client_2 -->
+    <node pkg="ros_service" type="service_client_node" name="service_client_2" output="screen" args="$(arg c) $(arg d)"/>
+    </group>
+</launch> 

@@ -1,0 +1,14 @@
+<launch>
+    <!-- 
+        source ./devel/setup.bash
+        roslaunch helloworld start_turtle.launch
+    -->
+    <!-- GUI图像界面 -->
+    <node pkg="turtlesim" type="turtlesim_node" name="turtle_GUI"/> 
+    <!-- 控制台界面 -->
+    <node pkg="turtlesim" type="turtle_teleop_key" name="node_1_turtle_KEY" />
+    <!-- 执行C语言程序结点：其中type="ros_helloworld_c_node"就是之前对应的配置文件映射名  output="screen"也就是日志信息打印在窗口中输出 -->
+    <node pkg="ros_helloworld" type="ros_helloworld_c_node" name="node_2_hello_c_node" output="screen"/>
+    <!-- 执行python结点，这里的type直接填写对应的python文件名 -->
+    <node pkg="ros_helloworld" type="ros_helloworld_p.py" name="node_3_hello_py_node" output="screen"/>
+</launch>

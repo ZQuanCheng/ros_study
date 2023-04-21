@@ -1,0 +1,33 @@
+<launch>
+    <arg name="a" default="10"/>
+    <arg name="b" default="5"/>
+    <arg name="c" default="30"/>
+    <arg name="d" default="6"/>
+    <arg name="choose_operator_0" default="1"/>
+    <arg name="choose_operator_1" default="1"/>
+    <arg name="choose_operator_2" default="1"/>   
+    
+    <!--定义参数到参数服务器-->
+    <param name="calculation_method" type="int" value="$(arg choose_operator_0)"/>
+
+    <group ns="ns1">
+    <!--定义参数到参数服务器-->
+    <!--<rosparam command="load" file="$(find ros_parameter)/param/param.yaml" />-->
+    <param name="calculation_method" type="int" value="$(arg choose_operator_1)"/>
+    <!-- para_service_server_1 -->
+    <node pkg="ros_parameter" type="para_service_server_node" name="para_service_server_1" output="screen"/>
+    <!-- para_service_client_1 -->
+    <node pkg="ros_parameter" type="para_service_client_node" name="para_service_client_1" output="screen" args="$(arg a) $(arg b)"/> 
+    </group>
+    
+    <group ns="ns2">
+    <!--定义参数到参数服务器-->
+    <!--<rosparam command="load" file="$(find ros_parameter)/param/param.yaml" />-->
+    <param name="calculation_method" type="int" value="$(arg choose_operator_2)"/>
+    <!-- para_service_server_2 -->
+    <node pkg="ros_parameter" type="para_service_server_node" name="para_service_server_2" output="screen"/>
+    <!-- para_service_client_2 -->
+    <node pkg="ros_parameter" type="para_service_client_node" name="para_service_client_2" output="screen" args="$(arg c) $(arg d)"/>    
+    </group>
+
+</launch> 

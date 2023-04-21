@@ -1,0 +1,43 @@
+<launch>
+    <!-- 
+        source ~/catkin_ws/devel/setup.bash
+        roslaunch ros_topic union.launch
+    -->
+    <!-- 
+        基本格式为
+        <node pkg="" type="" name="" output="screen"/> 
+    -->
+    <!-- 
+        其中，
+        node pkg="" ：功能包的名称
+ 
+        其中，
+        type=""：实际运行的节点的名称（节点名）
+        执行C语言程序结点： CMakeLists.txt中add_executable()对应的配置文件映射名
+        执行python结点： CMakeLists.txt中catkin_install_python()对应的python文件名    
+
+        其中，
+        name="" ：根据需要，在运行时更改的名称
+ 
+        其中，
+        output="screen"也就是日志信息打印在窗口中输出 
+    -->
+
+    <!--
+    <group>是对指定节点进行分组的标签。选项有ns。这是命名空间（name space），是组的名称，属于该组的节点和消息都包含在由ns指定的名称中。
+    -->
+    
+    <group ns="ns1">
+    <!-- topic_publisher_1 -->
+    <node pkg="ros_topic" type="topic_publisher_node" name="topic_publisher_1" output="screen"/>
+    <!-- topic_subscriber_1 -->
+    <node pkg="ros_topic" type="topic_subscriber_node" name="topic_subscriber_1" output="screen"/>
+    </group>
+
+    <group ns="ns2">
+    <!-- topic_publisher_2 -->
+    <node pkg="ros_topic" type="topic_publisher_node" name="topic_publisher_2" output="screen"/>
+    <!-- topic_subscriber_2 -->
+    <node pkg="ros_topic" type="topic_subscriber_node" name="topic_subscriber_2" output="screen"/>
+    </group>
+</launch> 
